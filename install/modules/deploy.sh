@@ -266,6 +266,9 @@ deploy_package() {
             cp -r "$REPO_ROOT/src/." "$TARGET_BASE/src/"
             find "$TARGET_BASE/src/scripts" -type f -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
         fi
+        if [ -f "$REPO_ROOT/version.txt" ]; then
+            cp "$REPO_ROOT/version.txt" "$TARGET_BASE/src/version.txt"
+        fi
 
         if [ "$is_update" != "true" ]; then
             for cfg in "${EXTRA_CONFIGS[@]}"; do
