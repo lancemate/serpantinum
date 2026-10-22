@@ -28,6 +28,17 @@ Item {
 
     property bool showLayout: false
 
+    readonly property var allowedTrayIds: ["cachy-update"]
+    readonly property var visibleTrayItems: {
+        let items = SystemTray.items ? SystemTray.items.values : [];
+        return items.filter(it => {
+            if (!it) return false;
+            let id = (it.id || "").toLowerCase();
+            let title = (it.title || "").toLowerCase();
+            return root.allowedTrayIds.includes(id) || root.allowedTrayIds.includes(title);
+        });
+    }
+
     readonly property real iconSize: barWindow ? barWindow.cs(isCompact ? 15 : 16) : (isCompact ? 15 : 16)
     readonly property real itemSpacing: barWindow ? barWindow.cs(isCompact ? 8 : 10) : (isCompact ? 8 : 10)
     readonly property real iconPadding: barWindow ? barWindow.cs(isCompact ? 10 : 12) : (isCompact ? 10 : 12)
@@ -114,7 +125,7 @@ Item {
 
         Repeater {
             id: trayRepeater
-            model: (!module || module.moduleActive) ? SystemTray.items : null
+            model: (!module || module.moduleActive) ? root.visibleTrayItems : null
 
             onCountChanged: {
                 if (count === 0) {
