@@ -61,8 +61,9 @@ PanelWindow {
         ? ThemeBackend.borderRadius
         : s(12)
 
+    property real contentMargin: s(10)
     property real menuWidth: s(240)
-    property real menuHeight: contentCol.implicitHeight
+    property real menuHeight: contentCol.implicitHeight + contentMargin * 2
     property real menuOffset: s(10)
     property real edgeMargin: s(12)
 
@@ -174,12 +175,12 @@ PanelWindow {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.margins: trayPrefsWindow.s(10)
+                anchors.margins: trayPrefsWindow.contentMargin
                 spacing: trayPrefsWindow.s(6)
 
                 Text {
                     Layout.fillWidth: true
-                    text: I18n.t("bar.tray.prefs_title", "Tray Icons")
+                    text: "Tray Icons"
                     font.family: ThemeBackend.fontFamily
                     font.weight: Font.Bold
                     font.pixelSize: trayPrefsWindow.s(12)
@@ -189,7 +190,7 @@ PanelWindow {
                 Text {
                     Layout.fillWidth: true
                     visible: trayPrefsWindow.trayItems.length === 0
-                    text: I18n.t("bar.tray.prefs_empty", "No tray icons running")
+                    text: "No tray icons running"
                     wrapMode: Text.WordWrap
                     font.family: ThemeBackend.fontFamily
                     font.pixelSize: trayPrefsWindow.s(11)
