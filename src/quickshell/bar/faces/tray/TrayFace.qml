@@ -267,4 +267,21 @@ Item {
             }
         }
     }
+
+    Timer {
+        interval: 30000
+        repeat: true
+        running: true
+        onTriggered: {
+            if (root.moduleActive && root.visible && !trayPrefsToggle.visible) {
+                let scrName = (barWindow && barWindow.screen) ? barWindow.screen.name : "NOSCREEN";
+                console.log("[TRAYDBG3] ANOMALY screen=" + scrName + " moduleActive=" + root.moduleActive + " visibleTrayCount=" + root.visibleTrayCount + " itemCount=" + root.itemCount + " targetLength=" + root.targetLength + " implicitWidth=" + root.implicitWidth + " rootWidth=" + root.width);
+                console.log("[TRAYDBG3] ANOMALY screen=" + scrName + " toggle x=" + trayPrefsToggle.x + " width=" + trayPrefsToggle.width + " visible=" + trayPrefsToggle.visible + " opacity=" + trayPrefsToggle.opacity);
+                for (let i = 0; i < trayLayout.children.length; i++) {
+                    let c = trayLayout.children[i];
+                    console.log("[TRAYDBG3] ANOMALY screen=" + scrName + "   child[" + i + "]=" + c + " x=" + c.x + " width=" + c.width + " visible=" + c.visible);
+                }
+            }
+        }
+    }
 }
