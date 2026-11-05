@@ -21,6 +21,7 @@ Item {
         return dir;
     }
     property string configPath: matugenBaseDir + "/config.toml"
+    property string configPathApps: matugenBaseDir + "/config-apps.toml"
     readonly property string stateDir: (typeof Caching !== "undefined" && Caching.stateDir) ? Caching.stateDir : (Quickshell.env("HOME") + "/.local/state/serpantinum")
     readonly property string palettePath: stateDir + "/matugen/palette.json"
 
@@ -98,11 +99,9 @@ Item {
 
         let wrap = function(hex) {
             let val = hex ? hex.toString() : "#000000";
-            return {
-                default: { hex: val, color: val },
-                dark: { hex: val, color: val },
-                light: { hex: val, color: val }
-            };
+            let stripped = val.startsWith("#") ? val.substring(1) : val;
+            let entry = { hex: val, hex_stripped: stripped, color: val };
+            return { default: entry, dark: entry, light: entry };
         };
 
         let md3 = {
@@ -287,8 +286,11 @@ Item {
             "bash", "-c",
             "mkdir -p \"$1\" \"$(dirname \"$4\")\" || exit 1; " +
             "printf '%s\\n' \"$2\" > \"$1/qs_colors.json.tmp.$$\" && mv -f \"$1/qs_colors.json.tmp.$$\" \"$1/qs_colors.json\" && " +
-            "printf '%s\\n' \"$3\" > \"$4.tmp.$$\" && mv -f \"$4.tmp.$$\" \"$4\"",
-            "_", root.stateDir, rawJson, md3Json, root.palettePath
+            "printf '%s\\n' \"$3\" > \"$4.tmp.$$\" && mv -f \"$4.tmp.$$\" \"$4\" && " +
+            "tmp_md3=\"$1/static_md3_colors.json.$$\"; " +
+            "printf '%s\\n' \"$3\" > \"$tmp_md3\" && " +
+            "matugen -c \"$5\" json \"$tmp_md3\"; rc=$?; rm -f \"$tmp_md3\"; exit $rc",
+            "_", root.stateDir, rawJson, md3Json, root.palettePath, root.configPathApps
         ];
         root.generationStarted();
         matugenProcess.running = true;

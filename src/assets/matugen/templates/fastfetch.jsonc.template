@@ -1,0 +1,186 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "type": "kitty-direct",
+        "source": "/home/ben/.config/fastfetch/assets/jedi_shadow.png",
+        "width": 45,
+        "preserveAspectRatio": true,
+        "padding": {
+            "top": 1,
+            "left": 6
+        }
+    },
+  "display": {
+    "separator": "  "
+  },
+  "modules": [
+    "break",
+    {
+      "type": "custom",
+      "format": "╭─➤  HARDWARE ⮜─────────────────────────────────────────────╮",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "custom",
+      "format": "╰─┬──────────────────────────────────────────────────────────╯",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "chassis",
+      "outputColor": "{{colors.tertiary.default.hex}}",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "cpu",
+      "outputColor": "{{colors.tertiary.default.hex}}",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "gpu",
+      "outputColor": "{{colors.tertiary.default.hex}}",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "memory",
+      "outputColor": "{{colors.tertiary.default.hex}}",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "disk",
+      "outputColor": "{{colors.tertiary.default.hex}}",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "display",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "battery",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "custom",
+      "format": "  ╰──────────────────────────────────────────────────────────╯",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "╭─➤  SOFTWARE ⮜─────────────────────────────────────────────╮",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "custom",
+      "format": "╰─┬──────────────────────────────────────────────────────────╯",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "os",
+      "key": "  ├ ",
+      "keyColor": "{{colors.tertiary.default.hex}}",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "kernel",
+      "key": "  ├ ",
+      "keyColor": "{{colors.tertiary.default.hex}}",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "shell",
+      "key": "  ├ ",
+      "keyColor": "{{colors.tertiary.default.hex}}",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "packages",
+      "key": "  ├ ",
+      "keyColor": "{{colors.tertiary.default.hex}}",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "terminal",
+      "key": "  ├ ",
+      "keyColor": "{{colors.tertiary.default.hex}}",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "wm",
+      "key": "  ├ ",
+      "keyColor": "{{colors.tertiary.default.hex}}",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "de",
+      "key": "  ├ ",
+      "keyColor": "{{colors.tertiary.default.hex}}",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "custom",
+      "format": "  ╰──────────────────────────────────────────────────────────╯",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "╭─➤  CUSTOMIZATION ⮜─────────────────────────────────────────╮",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "custom",
+      "format": "╰─┬───────────────────────────────────────────────────────────╯",
+      "outputColor": "{{colors.primary.default.hex}}"
+    },
+    {
+      "type": "theme",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "icons",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "wmtheme",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "font",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "terminalfont",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "cursor",
+      "key": "  ├ ",
+      "keyColor": "{{colors.primary.default.hex}}",
+      "outputColor": "{{colors.tertiary.default.hex}}"
+    },
+    {
+      "type": "custom",
+      "format": "  ╰──────────────────────────────────────────────────────────╯",
+      "outputColor": "{{colors.primary.default.hex}}"
+    }
+  ]
+}
