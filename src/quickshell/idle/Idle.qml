@@ -244,7 +244,14 @@ Item {
         } else if (Compositor.name === "mango") {
             Quickshell.execDetached(["sh", "-c", "mmsg get all-monitors 2>/dev/null | jq -r '.monitors[]?.name' | while read -r mon; do mmsg dispatch \"sleep_monitor,$mon\"; done"]);
         } else if (Compositor.name === "hyprland") {
-            Quickshell.execDetached(["sh", "-c", "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })' 2>/dev/null || hyprctl dispatch 'hl.dsp.dpms({ action = \"off\" })' 2>/dev/null || hyprctl dispatch dpms off"]);
+            // Plain `dpms off` leaves monitors re-enabled if a sink drops its HPD link while
+            // asleep and re-reports as connected -- a known aquamarine/Hyprland bug where the
+            // hotplug-triggered reconnect path only checks the monitor's `disabled` rule, not
+            // its DPMS state (https://github.com/hyprwm/Hyprland/issues/16855, still open as of
+            // 0.57.1). Fully disabling each monitor is immune to that reconnect path -- verified
+            // by holding a disabled monitor through its sink's drop/reconnect cycle without it
+            // coming back. Falls back to plain dpms off if `hl.monitor`/jq aren't available.
+            Quickshell.execDetached(["sh", "-c", 'hyprctl monitors -j 2>/dev/null | jq -r ".[].name" 2>/dev/null | while read -r mon; do hyprctl eval "hl.monitor({ output = \\"$mon\\", disabled = true })" >/dev/null 2>&1; done || hyprctl dispatch \'hl.dsp.dpms({ action = "disable" })\' 2>/dev/null || hyprctl dispatch \'hl.dsp.dpms({ action = "off" })\' 2>/dev/null || hyprctl dispatch dpms off']);
         }
     }
 
@@ -254,7 +261,10 @@ Item {
         } else if (Compositor.name === "mango") {
             Quickshell.execDetached(["sh", "-c", "mmsg get all-monitors 2>/dev/null | jq -r '.monitors[]?.name' | while read -r mon; do mmsg dispatch \"wakeup_monitor,$mon\"; done"]);
         } else if (Compositor.name === "hyprland") {
-            Quickshell.execDetached(["sh", "-c", "hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })' 2>/dev/null || hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })' 2>/dev/null || hyprctl dispatch dpms on"]);
+            // Monitors disabled via dpmsOff() above aren't real outputs anymore, so a plain
+            // dpms-on dispatch has nothing to wake -- a full config reload re-applies them
+            // (verified: restores mode/position/scale/transform exactly).
+            Quickshell.execDetached(["hyprctl", "reload"]);
         }
     }
 
