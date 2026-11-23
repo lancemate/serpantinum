@@ -17,6 +17,15 @@ Item {
     // [{class, title}] for currently open windows, refreshed every poll.
     property var runningClients: []
 
+    // What the popup actually shows: enabled entries stay visible even when not running (so you
+    // can turn one off without relaunching the app), but a disabled entry that isn't currently
+    // open drops out of view -- otherwise every one-off window ever opened would sit in this list
+    // forever. Nothing is lost: knownApps above still remembers it, so if it runs again later it
+    // reappears with whatever state it had, instead of being re-added as a fresh duplicate.
+    readonly property var visibleApps: {
+        return root.knownApps.filter(a => a.enabled || root.runningClients.some(r => r.class === a.class));
+    }
+
     readonly property bool anyEnabledAppRunning: {
         for (let i = 0; i < root.runningClients.length; i++) {
             let cls = root.runningClients[i].class;

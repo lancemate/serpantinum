@@ -254,7 +254,7 @@ PanelWindow {
 
                 Text {
                     Layout.fillWidth: true
-                    visible: IdleInhibitPrefs.knownApps.length === 0
+                    visible: IdleInhibitPrefs.visibleApps.length === 0
                     text: "No apps seen yet"
                     wrapMode: Text.WordWrap
                     font.family: ThemeBackend.fontFamily
@@ -263,7 +263,7 @@ PanelWindow {
                 }
 
                 Repeater {
-                    model: IdleInhibitPrefs.knownApps
+                    model: IdleInhibitPrefs.visibleApps
 
                     delegate: RowLayout {
                         Layout.fillWidth: true
