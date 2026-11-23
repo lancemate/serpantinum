@@ -234,6 +234,62 @@ PanelWindow {
                         }
                     }
                 }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.topMargin: trayPrefsWindow.s(4)
+                    Layout.preferredHeight: 1
+                    color: Qt.alpha(ThemeBackend.subtext0, 0.2)
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    Layout.topMargin: trayPrefsWindow.s(2)
+                    text: "Inhibit Idle"
+                    font.family: ThemeBackend.fontFamily
+                    font.weight: Font.Bold
+                    font.pixelSize: trayPrefsWindow.s(12)
+                    color: ThemeBackend.text
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    visible: IdleInhibitPrefs.knownApps.length === 0
+                    text: "No apps seen yet"
+                    wrapMode: Text.WordWrap
+                    font.family: ThemeBackend.fontFamily
+                    font.pixelSize: trayPrefsWindow.s(11)
+                    color: ThemeBackend.subtext0
+                }
+
+                Repeater {
+                    model: IdleInhibitPrefs.knownApps
+
+                    delegate: RowLayout {
+                        Layout.fillWidth: true
+                        spacing: trayPrefsWindow.s(8)
+
+                        Text {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignVCenter
+                            text: modelData.label || modelData.class || ""
+                            elide: Text.ElideRight
+                            font.family: ThemeBackend.fontFamily
+                            font.pixelSize: trayPrefsWindow.s(11)
+                            color: ThemeBackend.text
+                        }
+
+                        Toggle {
+                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                            checked: !!modelData.enabled
+                            accentColor: ThemeBackend.mauve
+                            baseColor: ThemeBackend.surface1
+                            handleColor: ThemeBackend.crust
+                            handleOffColor: ThemeBackend.text
+                            onToggled: function(c) { IdleInhibitPrefs.setEnabled(modelData.class, c); }
+                        }
+                    }
+                }
             }
         }
     }
