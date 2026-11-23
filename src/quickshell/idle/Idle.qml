@@ -110,6 +110,31 @@ Item {
     // Set while an app asks org.freedesktop.ScreenSaver not to lock (games, Steam, Wine)
     property bool isAppInhibited: false
 
+    // Blocks DPMS only (not dim/lock/suspend) while any of these process names are running,
+    // checked directly via pgrep rather than through org.freedesktop.ScreenSaver -- deliberately
+    // independent of respectInhibitors/isAppInhibited above, which stays off because stuck/rogue
+    // inhibits from unrelated apps have been a recurring problem. This can't get stuck the same
+    // way: it's re-derived from a fresh pgrep every interval, so it clears itself the moment the
+    // process actually exits. Disabling a monitor's CRTC for DPMS (see dpmsOff() below) can crash
+    // a fullscreen Proton/Wine game whose swapchain is attached to it -- add more exe names here
+    // as needed.
+    property var dpmsBlockingProcessPatterns: ["AION2.exe"]
+    property bool isGameRunning: false
+
+    Timer {
+        interval: 15000
+        running: idleRoot.dpmsBlockingProcessPatterns.length > 0
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: gameCheckProc.running = true
+    }
+
+    Process {
+        id: gameCheckProc
+        command: ["pgrep", "-f", idleRoot.dpmsBlockingProcessPatterns.join("|")]
+        onExited: exitCode => idleRoot.isGameRunning = (exitCode === 0)
+    }
+
     Process {
         id: idleHelperProc
         running: Caching.qsDir !== ""
@@ -407,6 +432,7 @@ Item {
                 "remaining": idleRoot.manualInhibit && Number(idleSettings.caffeineEndTime) > 0 ? Math.max(0, Math.round((Number(idleSettings.caffeineEndTime) - Date.now()) / 1000)) : 0
             },
             "appInhibited": idleRoot.isAppInhibited,
+            "gameRunning": idleRoot.isGameRunning,
             "mediaPlaying": idleRoot.isMediaPlaying,
             "locked": idleRoot.isLocked,
             "dimmed": idleRoot.isDimmed,
@@ -438,6 +464,7 @@ Item {
             property bool isActionEnabled: monitorDelegate.modelData && monitorDelegate.modelData.enabled !== undefined ? monitorDelegate.modelData.enabled : true
             property bool isValidInPipeline: idleRoot.isActionPipelineValid(monitorDelegate.modelData)
             property bool respectsInhibitors: monitorDelegate.modelData && monitorDelegate.modelData.respectInhibitors !== undefined ? monitorDelegate.modelData.respectInhibitors : true
+            property bool blockedByGame: monitorDelegate.modelData && monitorDelegate.modelData.id === "dpms" && idleRoot.isGameRunning
 
             IdleMonitor {
                 timeout: monitorDelegate.warnTimeout
@@ -445,6 +472,7 @@ Item {
                          monitorDelegate.isValidInPipeline &&
                          monitorDelegate.isActionEnabled &&
                          monitorDelegate.hasWarning &&
+                         !monitorDelegate.blockedByGame &&
                          (!monitorDelegate.modelData || !monitorDelegate.modelData.mprisInhibit || !idleRoot.isMediaPlaying) &&
                          (!monitorDelegate.respectsInhibitors || !idleRoot.isAppInhibited)
                 respectInhibitors: monitorDelegate.respectsInhibitors
@@ -461,6 +489,7 @@ Item {
                 enabled: idleRoot.isIdleSystemActive &&
                          monitorDelegate.isValidInPipeline &&
                          monitorDelegate.isActionEnabled &&
+                         !monitorDelegate.blockedByGame &&
                          (!monitorDelegate.modelData || !monitorDelegate.modelData.mprisInhibit || !idleRoot.isMediaPlaying) &&
                          (!monitorDelegate.respectsInhibitors || !idleRoot.isAppInhibited)
                 respectInhibitors: monitorDelegate.respectsInhibitors
